@@ -196,7 +196,6 @@ export type GetJobFromQueueResponse = {
 
 export type SDJob = {
   id: string;
-  batch_size: number;
   upload_url: string[];
   params: Text2ImageRequest;
 };
