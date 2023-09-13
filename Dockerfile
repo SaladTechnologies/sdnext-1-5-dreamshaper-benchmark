@@ -18,7 +18,7 @@ RUN npm run build
 RUN npx pkg -t node18-linux-x64 --out-path ./benchmark-worker .
 
 # Rebase the image to the inference server image
-FROM saladtechnologies/sdnext-sdxl10:latest
+FROM saladtechnologies/sdnext-dreamshaper:latest
 
 # And then copy the benchmark worker into the inference image
 COPY --from=build /app/benchmark-worker ./benchmark-worker
@@ -38,11 +38,10 @@ CMD [\
   "${INSTALLDIR}/entrypoint.sh \
   --listen \
   --no-download \
-  --backend diffusers \
   --use-cuda \
   --ckpt ${CKPT} \
   --docs \
   --quick \
-  --server-name ${HOST} \
+  --server-name \"${HOST}\" \
   --port ${PORT} \
   & benchmark-worker/sdnext-benchmark"]

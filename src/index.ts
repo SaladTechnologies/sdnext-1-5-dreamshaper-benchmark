@@ -33,26 +33,11 @@ const testJob: Text2ImageRequest = {
   prompt: "cat",
 
   // We want to run the base model for 20 steps
-  steps: 20,
-  width: 1216,
-  height: 896,
+  steps: 35,
+  width: 512,
+  height: 512,
   send_images: true,
   cfg_scale: 7,
-
-  /**
-   * We want to run the refiner for 15 steps, starting at step 20.
-   * This requires enabling high resolution, but setting the upscaler to "None".
-   *  */ 
-  enable_hr: true,
-  hr_upscaler: "None",
-  
-  /**
-   * The number of steps run by the refiner is, for some reason,
-   * equal to denoising_strength * hr_second_pass_steps.
-   */
-  refiner_start: 20,
-  denoising_strength: 0.43,
-  hr_second_pass_steps: 35,
 };
 
 
@@ -91,7 +76,7 @@ function getSystemInfo() : { vCPU: number, MemGB: number } {
  * In this case, we're sending the results to our reporting server.
  */
 async function recordResult(result: {
-  prompt: string, 
+  params: Text2ImageRequest,
   id: string, 
   inference_time: number, 
   output_urls: string[], 
@@ -142,8 +127,7 @@ async function getJob(): Promise<{request: Text2ImageRequest, messageId: string,
        *  */ 
       request: {
         ...testJob,
-        prompt: job.prompt,
-        batch_size: job.batch_size,
+        ...job.params
       },
 
       /**
@@ -245,22 +229,6 @@ async function getSDNextLogs(): Promise<string[]> {
   return json as string[];
 }
 
-/**
- * Enables the refiner model. This can take quite a while,
- * but must be done before inference can be run.
- */
-async function enableRefiner(): Promise<void> {
-  console.log("Enabling refiner...");
-  const url = new URL("/sdapi/v1/options", SDNEXT_URL);
-  await fetch(url.toString(), {
-    method: "POST",
-    body: JSON.stringify({"sd_model_refiner": "refiner/sd_xl_refiner_1.0.safetensors"}),
-    headers: {
-      "Content-Type": "application/json"
-    },
-  });
-}
-
 async function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
@@ -359,7 +327,6 @@ async function main(): Promise<void> {
    */
   await waitForServerToStart();
   await waitForModelToLoad();
-  await enableRefiner();
 
   /**
    * We run a single job to verify that everything is working.
@@ -402,7 +369,7 @@ async function main(): Promise<void> {
     })).then(async (downloadUrls) => {
       await recordResult({
         id: jobId,
-        prompt: request.prompt,
+        params: request,
         inference_time: jobElapsed,
         output_urls: downloadUrls,
         system_info: systemInfo

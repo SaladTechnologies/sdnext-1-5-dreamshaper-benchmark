@@ -1,6 +1,6 @@
 # sdnext-benchmark
 
-This project provides a pattern for creating benchmarks with an sdnext container. This example uses a preconfigured [Stable Diffusion XL 1.0 image](https://hub.docker.com/r/saladtechnologies/sdnext-sdxl10).
+This project provides a pattern for creating benchmarks with an sdnext container. This example uses a preconfigured [Dreamshaper Image](https://hub.docker.com/r/saladtechnologies/sdnext-dreamshaper).
 
 ## Getting Started
 
@@ -11,8 +11,8 @@ docker run --gpus all \
 -e BENCHMARK_SIZE=10 \
 -e REPORTING_URL=https://someurl.com \
 -e REPORTING_API_KEY=1234567890 \
--e BENCHMARK_ID=sdxl-benchmark-0 \
-saladtechnologies/sdxl-benchmark:latest
+-e BENCHMARK_ID=dreamshaper-benchmark-0 \
+saladtechnologies/dreamshaper-benchmark:latest
 ```
 
 or
@@ -29,7 +29,7 @@ To build the image, run the following command:
 
 ```bash
 docker buildx build \
--t saladtechnologies/sdxl-benchmark:latest \
+-t saladtechnologies/dreamshaper-benchmark:latest \
 --provenance=false \
 --output type=docker \
 .

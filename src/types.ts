@@ -195,10 +195,10 @@ export type GetJobFromQueueResponse = {
 };
 
 export type SDJob = {
-  prompt: string;
   id: string;
   batch_size: number;
   upload_url: string[];
+  params: Text2ImageRequest;
 };
 
 export type DeleteQueueMessageResponse = {

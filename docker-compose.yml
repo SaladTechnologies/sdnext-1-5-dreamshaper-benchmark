@@ -1,8 +1,8 @@
 version: '3'
 
 services:
-  sdxl-benchmark:
-    image: saladtechnologies/sdxl-benchmark:latest
+  dreamshaper-benchmark:
+    image: saladtechnologies/dreamshaper-benchmark:latest
     deploy:
       resources:
         reservations:
@@ -16,11 +16,11 @@ services:
 
       # This is used to identify the benchmark,
       # and we can query by it in DynamoDB
-      BENCHMARK_ID: sdxl-benchmark-test
+      BENCHMARK_ID: dreamshaper-benchmark-test
 
       # This is the name of the queue that the benchmark
       # will poll for work, via the QUEUE_URL
-      QUEUE_NAME: ${QUEUE_NAME:-sdxl-benchmark-test}
+      QUEUE_NAME: ${QUEUE_NAME:-dreamshaper-benchmark-test}
 
       # You will need to set these values in the environment
       # before running `docker-compose up`
